@@ -1,0 +1,25 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Pastikan PHP versi 8.1 digunakan
+    AddHandler application/x-httpd-alt-php81 .php
+
+    # Redirect semua request ke index.php jika bukan file atau direktori
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [L]
+
+    # Opsi tambahan: Hindari akses langsung ke file sensitif
+    <Files .*>
+        Order Deny,Allow
+        Deny from all
+    </Files>
+
+</IfModule>
+
+# Opsi tambahan: Tingkatkan batas waktu jika dibutuhkan
+
+<IfModule mod_php.c>
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+</IfModule>
