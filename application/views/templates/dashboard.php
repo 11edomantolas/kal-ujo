@@ -303,6 +303,13 @@
                     </a>
                 </li>
             <?php endif; ?>
+            <!-- Monitoring UJO -->
+            <li class="nav-item <?= is_active('payment', 'monitoring'); ?>">
+                <a class="nav-link" href="<?= base_url('payment/monitoring'); ?>">
+                    <i class="fas fa-fw fa-chart-line"></i>
+                    <span>Monitoring Transaksi UJO</span>
+                </a>
+            </li>
             <!-- History Pekerjaan -->
             <?php if (has_permission('can_view_payment_history')): ?>
                 <li class="nav-item <?= is_active('payment', 'history'); ?>">

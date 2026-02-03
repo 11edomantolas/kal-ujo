@@ -7,7 +7,7 @@
 <div class="card shadow-lg border-0 mb-4 rounded-4 overflow-hidden">
     <div class="card-header text-white py-3" style="background: linear-gradient(90deg, #0056b3, #007bff);">
         <h4 class="m-0 fw-bold">
-            <i class="fas fa-money-check-alt me-2"></i> Confirm Pekerjaan
+            <i class="fas fa-money-check-alt me-2"></i> Settlement Pekerjaan
         </h4>
     </div>
 
@@ -98,7 +98,7 @@
                             <td colspan="9" class="p-0">
                                 <div class="collapse breakdown-container" id="detail-<?= $no_cs ?>">
                                     <div class="breakdown-section-header">
-                                        <i class="fas fa-tasks me-2"></i> Detail & Konfirmasi Pekerjaan
+                                        <i class="fas fa-tasks me-2"></i> Detail & Settlement Pekerjaan
                                     </div>
                                     <table class="table table-breakdown mb-0">
                                         <thead>
@@ -172,7 +172,7 @@
 
                                                                 <button type="submit" class="btn btn-success btn-sm btn-confirm"
                                                                     disabled title="Lengkapi Surat Jalan & Tonase">
-                                                                    <i class="fas fa-check me-1"></i> Konfirmasi
+                                                                    <i class="fas fa-check me-1"></i>settlement
                                                                 </button>
                                                             </form>
                                                         <?php else: ?>

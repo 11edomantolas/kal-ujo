@@ -52,7 +52,11 @@ class Uangjalan extends MY_Controller
         $data['destination_list'] = $this->Ujo_pokok_model->get_destination_unique();
 
         // ===== VALIDASI FORM =====
-        $this->form_validation->set_rules('no_cs', 'No CS', 'required');
+        $this->form_validation->set_rules(
+            'no_cs',
+            'No CS',
+            'required|callback_no_cs_unique'
+        );
         $this->form_validation->set_rules('tanggal', 'Tanggal', 'required');
         $this->form_validation->set_rules('tipe_pekerjaan', 'Tipe Pekerjaan', 'required');
         $this->form_validation->set_rules('no_unit', 'No Unit', 'required');
@@ -204,4 +208,21 @@ class Uangjalan extends MY_Controller
         ]);
         exit;
     }
+
+    //Cek duplikasi No CS
+    public function no_cs_unique($no_cs)
+    {
+        if ($this->Uangjalan_model->cek_no_cs($no_cs)) {
+
+            // ⚠️ INI YANG WAJIB ADA
+            $this->form_validation->set_message(
+                'no_cs_unique',
+                'Nomor CS <b>sudah terdaftar</b>. Silakan gunakan nomor lain.'
+            );
+
+            return false;
+        }
+        return true;
+    }
+
 }

@@ -43,7 +43,9 @@
                             $tipeUnik = array_unique(array_column($angkutan, 'tipe_angkutan'));
                             foreach ($tipeUnik as $tipe):
                                 ?>
-                                <option value="<?= $tipe; ?>"><?= $tipe; ?></option>
+                                <option value="<?= $tipe; ?>">
+                                    <?= $tipe; ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
 
@@ -51,7 +53,7 @@
                     </div>
                     <div class="form-group mb-3">
                         <label class="fw-semibold text-dark">No Unit</label>
-                        <select name="no_unit" id="no_unit" class="form-control border-primary" required>
+                        <select name="no_unit" id="no_unit" class="form-control border-primary" required disabled>
                             <option value="" disabled selected>Pilih No Unit</option>
                             <?php foreach ($angkutan as $a): ?>
                                 <option value="<?= $a['nomor_polisi']; ?>" data-tipe="<?= $a['tipe_angkutan']; ?>">
@@ -61,22 +63,24 @@
                         </select>
                     </div>
                     <!-- Driver -->
-                    <div class="form-group">
+                    <div class="form-group position-relative">
                         <label class="fw-bold text-dark">Driver</label>
-                        <select id="nama" name="driver" class="form-control border-primary" required>
-                            <option value="" disabled selected>Pilih Driver</option>
-                            <?php foreach ($driver as $d): ?>
-                                <option value="<?= $d['nama']; ?>" data-nomor_rekening="<?= $d['nomor_rekening']; ?>">
-                                    <?= $d['nama']; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+
+                        <div class="combo-wrapper">
+                            <input type="text" id="driver" name="driver" class="form-control border-primary"
+                                autocomplete="off" required>
+                            <span id="driverToggle" class="combo-arrow">▾</span>
+                        </div>
+
+                        <div id="driverDropdown" class="border rounded position-absolute w-100"
+                            style="display:none; top:100%; left:0; background:#1e3a5f; color:#fff; z-index:1000;">
+                        </div>
                     </div>
 
-                    <!-- Nomor Rekening -->
                     <div class="form-group mt-2">
                         <label class="fw-bold text-dark">Nomor Rekening Driver</label>
                         <input type="text" id="nomor_rekening_text" class="form-control border-primary" readonly>
+
                         <input type="hidden" name="nomor_rekening" id="nomor_rekening_hidden">
                     </div>
                 </div>
@@ -136,40 +140,6 @@
                         </div>
 
                     </div>
-                    <script>
-                        $('#tipe_angkutan_select').on('change', function () {
-                            let tipeDipilih = $(this).val();
-
-                            // set ke hidden (buat database & UJO)
-                            $('#tipe_angkutan_hidden').val(tipeDipilih);
-
-                            // reset no unit
-                            $('#no_unit').val('');
-
-                            // filter no polisi
-                            $('#no_unit option').each(function () {
-                                let tipeOption = $(this).data('tipe');
-
-                                if (!tipeOption) return; // skip option "Pilih No Unit"
-
-                                if (tipeOption === tipeDipilih) {
-                                    $(this).show();
-                                } else {
-                                    $(this).hide();
-                                }
-                            });
-
-                            loadUJO(); // hitung ulang UJO
-                        });
-                        $('#nama').on('change', function () {
-                            var selected = $(this).find(':selected');
-                            var nomor_rekening = selected.data('nomor_rekening') || '';
-
-                            $('#nomor_rekening_text').val(nomor_rekening);
-                            $('#nomor_rekening_hidden').val(nomor_rekening);
-                        });
-
-                    </script>
 
                     <div class="form-group">
                         <label class="fw-bold text-dark">UJO (Rp)</label>
@@ -257,7 +227,7 @@
             $('#additionalFields').show();
         } else {
             $('#additionalFields').hide();
-            $('#additionalFields input').val('');
+            $('#additionalFields').find('input, textarea').val('');
             loadUJO(); // reset UJO tanpa additional
         }
     });
@@ -366,6 +336,43 @@
     }
 </script>
 <script>
+    $(document).ready(function () {
+
+        // 🔒 pastikan no unit disable saat awal
+        $('#no_unit').prop('disabled', true);
+
+        $('#tipe_angkutan_select').on('change', function () {
+            let tipeDipilih = $(this).val();
+
+            // set ke hidden
+            $('#tipe_angkutan_hidden').val(tipeDipilih);
+
+            // aktifkan no unit
+            $('#no_unit').prop('disabled', false);
+
+            // reset pilihan
+            $('#no_unit').val('');
+
+            // filter no polisi sesuai tipe
+            $('#no_unit option').each(function () {
+                let tipeOption = $(this).data('tipe');
+
+                if (!tipeOption) return; // skip "Pilih No Unit"
+
+                if (tipeOption === tipeDipilih) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            loadUJO();
+        });
+
+    });
+</script>
+
+<script>
     setupAutocomplete(
         'origin',
         'originDropdown',
@@ -452,7 +459,8 @@
             // ✅ CEK: apakah input ini punya dropdown autocomplete yang sedang tampil
             let hasActiveAutocomplete =
                 $(this).attr('id') === 'origin' && $('#originDropdown').is(':visible') ||
-                $(this).attr('id') === 'destination' && $('#destinationDropdown').is(':visible');
+                $(this).attr('id') === 'destination' && $('#destinationDropdown').is(':visible') ||
+                $(this).attr('id') === 'driver' && $('#driverDropdown').is(':visible');
 
             // 🔒 Jika autocomplete aktif → jangan pindah field
             if (hasActiveAutocomplete) return;
@@ -479,17 +487,159 @@
         });
     });
 </script>
+<script>
+    /* ================= DRIVER FIX ADD ================= */
+
+    (function () {
+
+        const driverData = <?= json_encode($driver); ?>;
+        let index = -1;
+
+        const $driver = $('#driver');
+        const $dropdown = $('#driverDropdown');
+        const $rekText = $('#nomor_rekening_text');
+        const $rekHidden = $('#nomor_rekening_hidden');
+
+        if (!$driver.length) return;
+
+        // 🔥 MATIKAN EVENT DRIVER LAMA (TANPA GANGGU JS LAIN)
+        $driver.off('input keydown focus');
+        $('#driverToggle').off('click');
+        $(document).off('click.driverAdd');
+
+        function render(list) {
+            $dropdown.empty();
+            if (!list.length) return $dropdown.hide();
+
+            list.forEach(d => {
+                $dropdown.append(`
+                <div class="autocomplete-item"
+                     data-nama="${d.nama}"
+                     data-rek="${d.nomor_rekening}">
+                    ${d.nama}
+                </div>
+            `);
+            });
+
+            $dropdown.show();
+        }
+
+        // INPUT
+        $driver.on('input', function () {
+            const keyword = this.value.toLowerCase().trim();
+            index = -1;
+
+            $rekText.val('');
+            $rekHidden.val('');
+
+            const list = keyword
+                ? driverData.filter(d => d.nama.toLowerCase().includes(keyword))
+                : driverData;
+
+            render(list);
+        });
+
+        // FOCUS
+        $driver.on('focus', function () {
+            render(driverData);
+        });
+
+        // KEYBOARD
+        $driver.on('keydown', function (e) {
+            const items = $dropdown.find('.autocomplete-item');
+            if (!items.length) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                index = (index + 1) % items.length;
+            }
+
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                index = (index - 1 + items.length) % items.length;
+            }
+
+            if (e.key === 'Enter' && index >= 0) {
+                e.preventDefault();
+                $(items[index]).click();
+            }
+
+            items.removeClass('active');
+            if (index >= 0) $(items[index]).addClass('active');
+        });
+
+        // CLICK ITEM
+        $dropdown.on('click', '.autocomplete-item', function () {
+            $driver.val($(this).data('nama'));
+            $rekText.val($(this).data('rek'));
+            $rekHidden.val($(this).data('rek'));
+            $dropdown.hide();
+
+            // 🔥 lanjut ke field berikutnya
+            // focusNextField($driver[0]);
+        });
+
+        // TOGGLE
+        $('#driverToggle').on('click', function (e) {
+            e.stopPropagation();
+            render(driverData);
+        });
+
+        // CLICK OUTSIDE
+        $(document).on('click.driverAdd', function (e) {
+            if (!$(e.target).closest('#driver, #driverDropdown, #driverToggle').length) {
+                $dropdown.hide();
+            }
+        });
+
+        // VALIDASI SUBMIT
+        $('form').on('submit', function (e) {
+            const nama = $driver.val().trim().toLowerCase();
+            const valid = driverData.some(d => d.nama.toLowerCase() === nama);
+
+            if (!valid) {
+                alert('Nama driver harus dipilih dari daftar');
+                $driver.focus();
+                e.preventDefault();
+            }
+        });
+
+    })();
+</script>
+
 
 
 <style>
-    .autocomplete-item {
+    .combo-wrapper {
+        position: relative;
+    }
+
+    .combo-arrow {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
         cursor: pointer;
+        font-size: 20px;
+        color: #555;
+    }
+
+    .autocomplete-item {
         padding: 6px 10px;
-        color: #fff;
+        cursor: pointer;
     }
 
     .autocomplete-item:hover,
     .autocomplete-item.active {
         background: #0d6efd;
+    }
+
+    html {
+        overflow-y: scroll;
+    }
+
+    #driverDropdown {
+        max-height: 190px;
+        overflow-y: auto;
     }
 </style>

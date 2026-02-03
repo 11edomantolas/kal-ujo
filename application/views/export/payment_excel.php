@@ -29,11 +29,11 @@ header("Expires: 0");
 <!-- ================= TABEL DATA ================= -->
 <table border="1" width="100%" cellpadding="6" cellspacing="0">
     <tr>
-        <th width="5%">No</th>
-        <th width="20%">Nama Bank</th>
-        <th width="25%">No Rekening</th>
-        <th width="20%">Driver</th>
-        <th width="30%">UJO Partial</th>
+        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="5%">No</th>
+        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="20%">Nama Bank</th>
+        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="25%">No Rekening</th>
+        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="20%">Driver</th>
+        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="30%">UJO Partial</th>
     </tr>
 
     <?php if (!empty($rows)): ?>

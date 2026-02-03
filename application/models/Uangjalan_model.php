@@ -7,8 +7,14 @@ class Uangjalan_model extends MY_Model
 
     public function get_all()
     {
-        return $this->db->get($this->table)->result_array();
+        return $this->db
+            ->order_by('tanggal', 'DESC')
+            ->order_by("FIELD(status_pembayaran, 'Unpaid', 'Partial', 'Paid')", '', false)
+            ->order_by("FIELD(status_pekerjaan, 'Uncompleted', 'Completed')", '', false)
+            ->get($this->table)
+            ->result_array();
     }
+
 
     // Data Yang Tampil di Uang Jalan akan digrup 
     public function get_grouped_by_no_cs($status = [])
@@ -107,6 +113,15 @@ class Uangjalan_model extends MY_Model
         }
 
         return $count; // jumlah rit yang berhasil di-insert
+    }
+
+    //Fungsinya mengecek duplikat pada no CS
+    public function cek_no_cs($no_cs)
+    {
+        return $this->db
+            ->where('no_cs', $no_cs)
+            ->get('uang_jalan')
+            ->row();
     }
 
     public function update($no_cs)

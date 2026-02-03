@@ -78,27 +78,29 @@
                         </select>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label class="fw-semibold text-dark">Driver</label>
-                        <select id="nama" name="driver" class="form-control border-primary" required>
-                            <option value="" disabled>Pilih Driver</option>
-                            <?php foreach ($driver as $d): ?>
-                                <option value="<?= $d['nama']; ?>" data-nomor_rekening="<?= $d['nomor_rekening']; ?>"
-                                    <?= $d['nama'] == $header['driver'] ? 'selected' : ''; ?>>
-                                    <?= $d['nama']; ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                    <div class="form-group position-relative">
+                        <label class="fw-bold text-dark">Driver</label>
+
+                        <div class="combo-wrapper">
+                            <input type="text" id="driver" name="driver" class="form-control border-primary"
+                                autocomplete="off" value="<?= $header['driver']; ?>" required>
+
+                            <span id="driverToggle" class="combo-arrow">▾</span>
+                        </div>
+
+                        <div id="driverDropdown" class="border rounded position-absolute w-100"
+                            style="display:none; top:100%; left:0; background:#1e3a5f; color:#fff; z-index:1000;">
+                        </div>
                     </div>
 
                     <div class="form-group mt-2">
                         <label class="fw-bold text-dark">Nomor Rekening Driver</label>
                         <input type="text" id="nomor_rekening_text" class="form-control border-primary"
                             value="<?= $header['nomor_rekening']; ?>" readonly>
+
                         <input type="hidden" name="nomor_rekening" id="nomor_rekening_hidden"
                             value="<?= $header['nomor_rekening']; ?>">
                     </div>
-
                 </div>
 
                 <!-- KANAN -->
@@ -280,12 +282,7 @@
             filterNoUnitByTipe(tipeAwal);
         }
     });
-    /* === Nama → Nomor Rekening === */
-    $('#nama').on('change', function () {
-        let norek = $(this).find(':selected').data('nomor_rekening') || '';
-        $('#nomor_rekening_text').val(norek);
-        $('#nomor_rekening_hidden').val(norek);
-    });
+
 
     /* === Additional === */
     if ($('#additional').val() === 'ya') {
@@ -297,7 +294,7 @@
             $('#additionalFields').show();
         } else {
             $('#additionalFields').hide();
-            $('#additionalFields input').val('');
+            $('#additionalFields').find('input, textarea').val('');
             loadUJO();
         }
     });
@@ -423,6 +420,96 @@
         loadUJO
     );
 </script>
+<script>
+    const driverData = <?= json_encode($driver); ?>;
+
+    (function () {
+        let index = -1;
+
+        function render(list) {
+            let dropdown = $('#driverDropdown').empty();
+            if (!list.length) return dropdown.hide();
+
+            list.forEach(d => {
+                dropdown.append(`
+                <div class="autocomplete-item"
+                     data-nama="${d.nama}"
+                     data-rek="${d.nomor_rekening}">
+                    ${d.nama}
+                </div>
+            `);
+            });
+
+            dropdown.show();
+        }
+
+        $('#driver').on('input', function () {
+            let keyword = this.value.toLowerCase().trim();
+            index = -1;
+
+            $('#nomor_rekening_text').val('');
+            $('#nomor_rekening_hidden').val('');
+
+            let list = keyword
+                ? driverData.filter(d => d.nama.toLowerCase().includes(keyword))
+                : driverData;
+
+            render(list);
+        });
+
+        $('#driver').on('focus', function () {
+            render(driverData);
+        });
+
+        $('#driver').on('keydown', function (e) {
+            let items = $('#driverDropdown .autocomplete-item');
+            if (!items.length) return;
+
+            if (e.key === 'ArrowDown') index = (index + 1) % items.length;
+            if (e.key === 'ArrowUp') index = (index - 1 + items.length) % items.length;
+
+            if (e.key === 'Enter' && index >= 0) {
+                e.preventDefault();
+                $(items[index]).click();
+            }
+
+            items.removeClass('active');
+            if (index >= 0) $(items[index]).addClass('active');
+        });
+
+        $(document).on('click', '#driverDropdown .autocomplete-item', function () {
+            $('#driver').val($(this).data('nama'));
+            $('#nomor_rekening_text').val($(this).data('rek'));
+            $('#nomor_rekening_hidden').val($(this).data('rek'));
+            $('#driverDropdown').hide();
+        });
+
+        $('#driverToggle').on('click', function (e) {
+            e.stopPropagation();
+            render(driverData);
+        });
+
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#driver, #driverDropdown, #driverToggle').length) {
+                $('#driverDropdown').hide();
+            }
+        });
+
+        // VALIDASI (sama seperti ADD)
+        $('form').on('submit', function (e) {
+            let nama = $('#driver').val().trim().toLowerCase();
+            let valid = driverData.some(d => d.nama.toLowerCase() === nama);
+
+            if (!valid) {
+                alert('Nama driver harus dipilih dari daftar');
+                $('#driver').focus();
+                e.preventDefault();
+            }
+        });
+
+    })();
+</script>
+
 
 <script>
     function checkVeselState() {
@@ -495,7 +582,9 @@
             // ✅ CEK: apakah input ini punya dropdown autocomplete yang sedang tampil
             let hasActiveAutocomplete =
                 $(this).attr('id') === 'origin' && $('#originDropdown').is(':visible') ||
-                $(this).attr('id') === 'destination' && $('#destinationDropdown').is(':visible');
+                $(this).attr('id') === 'destination' && $('#destinationDropdown').is(':visible') ||
+                $(this).attr('id') === 'driver' && $('#driverDropdown').is(':visible');
+
 
             // 🔒 Jika autocomplete aktif → jangan pindah field
             if (hasActiveAutocomplete) return;
@@ -525,14 +614,36 @@
 </script>
 
 <style>
-    .autocomplete-item {
+    .combo-wrapper {
+        position: relative;
+    }
+
+    .combo-arrow {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
         cursor: pointer;
+        font-size: 20px;
+        color: #555;
+    }
+
+    .autocomplete-item {
         padding: 6px 10px;
-        color: #fff;
+        cursor: pointer;
     }
 
     .autocomplete-item:hover,
     .autocomplete-item.active {
         background: #0d6efd;
+    }
+
+    html {
+        overflow-y: scroll;
+    }
+
+    #driverDropdown {
+        max-height: 190px;
+        overflow-y: auto;
     }
 </style>

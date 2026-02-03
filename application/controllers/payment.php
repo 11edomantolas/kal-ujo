@@ -177,6 +177,12 @@ class Payment extends MY_Controller
         $data['paid'] = $this->uangjalan->getHistorySuccess();
         $this->template->load('templates/dashboard', 'riwayat/index', $data);
     }
+    public function monitoring()
+    {
+        $data['title'] = 'Monitoring Transaksi UJO';
+        $data['all'] = $this->uangjalan->get_all();
+        $this->template->load('templates/dashboard', 'riwayat/monitoring', $data);
+    }
     public function export_excel()
     {
         $start = $this->input->get('start');

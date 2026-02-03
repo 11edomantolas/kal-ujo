@@ -274,7 +274,8 @@
     }
 
     .col-action {
-        width: 1px;
+        min-width: 70px;
+        width: 70px;
     }
 </style>
 
