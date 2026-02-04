@@ -115,15 +115,6 @@ class Uangjalan_model extends MY_Model
         return $count; // jumlah rit yang berhasil di-insert
     }
 
-    //Fungsinya mengecek duplikat pada no CS
-    public function cek_no_cs($no_cs)
-    {
-        return $this->db
-            ->where('no_cs', $no_cs)
-            ->get('uang_jalan')
-            ->row();
-    }
-
     public function update($no_cs)
     {
         $old_rit = $this->db

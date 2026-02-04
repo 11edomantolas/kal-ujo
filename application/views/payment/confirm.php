@@ -172,7 +172,7 @@
 
                                                                 <button type="submit" class="btn btn-success btn-sm btn-confirm"
                                                                     disabled title="Lengkapi Surat Jalan & Tonase">
-                                                                    <i class="fas fa-check me-1"></i>settlement
+                                                                    <i class="fas fa-check me-1"></i> Settlement
                                                                 </button>
                                                             </form>
                                                         <?php else: ?>
