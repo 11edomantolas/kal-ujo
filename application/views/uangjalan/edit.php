@@ -165,7 +165,8 @@
                             <input type="text" id="jumlah_rp" class="form-control border-primary">
 
                             <!-- input asli untuk database -->
-                            <input type="hidden" id="additionalJumlah" name="jumlah" value="<?= $header['jumlah']; ?>">
+                            <input type="hidden" id="additionalJumlah" name="jumlah"
+                                value="<?= $header['jumlah_total']; ?>">
                         </div>
 
                     </div>

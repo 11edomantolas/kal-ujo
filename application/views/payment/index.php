@@ -129,7 +129,7 @@
                             <p><strong>Tonase:</strong> <?= number_format($d['tonase'], 2); ?></p>
                             <p><strong>Origin:</strong> <?= $d['origin']; ?></p>
                             <p><strong>Destination:</strong> <?= $d['destination']; ?></p>
-                            <p><strong>Ritase:</strong> <?= $d['ritase']; ?></p>
+                            <p><strong>Jumlah Ritase:</strong> <?= $d['ritase']; ?></p>
                             <?php
                             $alasan = trim($d['alasan'] ?? '');
                             ?>

@@ -247,6 +247,9 @@
                             <p><strong>Destination:</strong>
                                 <?= $d['destination']; ?>
                             </p>
+                            <p><strong>Jumlah Ritase:</strong>
+                                <?= $d['ritase']; ?>
+                            </p>
                             <p>
                                 <strong>Total UJO:</strong>
                                 <span class="text-primary fw-semibold">

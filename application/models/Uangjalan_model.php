@@ -39,7 +39,7 @@ class Uangjalan_model extends MY_Model
         MAX(vesel) AS vesel,
         MAX(additional) AS additional,
         MAX(alasan) AS alasan,
-        MAX(jumlah) AS jumlah,
+        SUM(jumlah) AS jumlah,
         SUM(ujo) AS ujo,
         SUM(ujo_terbayar) AS ujo_terbayar,
         SUM(ujo_sisa) AS ujo_sisa,
@@ -78,6 +78,9 @@ class Uangjalan_model extends MY_Model
 
         $ujo_total = (int) $this->input->post('ujo', true); // TOTAL dari form
         $ritase = (int) $this->input->post('ritase', true);
+        $jumlah_total = (int) $this->input->post('jumlah', true);
+        $jumlah_per_rit = $ritase > 0 ? floor($jumlah_total / $ritase) : 0;
+
 
         $ujo_per_rit = $ritase > 0 ? ($ujo_total / $ritase) : 0;
         $count = 0;
@@ -100,7 +103,7 @@ class Uangjalan_model extends MY_Model
                 'vesel' => $this->input->post('vesel', true),
                 'additional' => $this->input->post('additional', true),
                 'alasan' => $this->input->post('alasan', true),
-                'jumlah' => $this->input->post('jumlah', true),
+                'jumlah' => $jumlah_per_rit,
                 'ujo' => $ujo_per_rit,
                 'ujo_terbayar' => 0,
                 'ujo_sisa' => $ujo_per_rit,
@@ -115,6 +118,8 @@ class Uangjalan_model extends MY_Model
         return $count; // jumlah rit yang berhasil di-insert
     }
 
+
+
     public function update($no_cs)
     {
         $old_rit = $this->db
@@ -127,6 +132,9 @@ class Uangjalan_model extends MY_Model
 
         $ujo_total = (int) $this->input->post('ujo', true); // TOTAL
         $rit_baru = (int) $this->input->post('ritase', true);
+        $jumlah_total = (int) $this->input->post('jumlah', true);
+        $jumlah_per_rit = $rit_baru > 0 ? floor($jumlah_total / $rit_baru) : 0;
+
 
         $total_terbayar = array_sum(array_column($old_rit, 'ujo_terbayar'));
         if ($ujo_total < $total_terbayar)
@@ -152,7 +160,7 @@ class Uangjalan_model extends MY_Model
             'vesel' => $this->input->post('vesel', true),
             'additional' => $this->input->post('additional', true),
             'alasan' => $this->input->post('alasan', true),
-            'jumlah' => $this->input->post('jumlah', true),
+            'jumlah' => $jumlah_per_rit,
             'ujo' => $ujo_per_rit,
             'ujo_sisa' => $ujo_per_rit - $total_terbayar,
             'ritase' => $rit_baru,
@@ -244,7 +252,7 @@ class Uangjalan_model extends MY_Model
         MAX(vesel) AS vesel,
         MAX(additional) AS additional,
         MAX(alasan) AS alasan,
-        MAX(jumlah) AS jumlah,
+        SUM(jumlah) AS jumlah,
         SUM(ujo) AS ujo,
         SUM(ujo_terbayar) AS ujo_terbayar,
         SUM(ujo_sisa) AS ujo_sisa,

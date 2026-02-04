@@ -104,6 +104,8 @@ class Uangjalan extends MY_Controller
         }
 
         $data['header'] = $data['uang_jalan'][0];
+        $data['header']['jumlah_total'] =
+            $data['header']['jumlah'] * $data['header']['ritase'];
 
         // master data
         $data['angkutan'] = $this->Angkutan_model->get_all();

@@ -155,7 +155,9 @@
                                                     <p><strong>Tonase:</strong> <?= number_format($data['tonase'], 2); ?></p>
                                                     <p><strong>Origin:</strong> <?= $data['origin']; ?></p>
                                                     <p><strong>Destination:</strong> <?= $data['destination']; ?></p>
-                                                    <p><strong>Ritase:</strong> <?= $data['ritase']; ?></p>
+                                                    <p><strong>Jumlah Ritase:</strong> <?= $data['ritase']; ?></p>
+                                                    <p><strong>Rit Ke:</strong> <?= $data['rit_ke']; ?>
+                                                    </p>
                                                     <?php
                                                     $alasan = trim($data['alasan'] ?? '');
                                                     ?>

@@ -142,7 +142,7 @@
                             <p><strong>Tonase:</strong> <?= number_format($data['tonase'], 2); ?></p>
                             <p><strong>Origin:</strong> <?= $data['origin']; ?></p>
                             <p><strong>Destination:</strong> <?= $data['destination']; ?></p>
-                            <p><strong>Ritase:</strong> <?= $data['ritase']; ?></p>
+                            <p><strong>Jumlah Ritase:</strong> <?= $data['ritase']; ?></p>
                             <?php
                             $alasan = trim($data['alasan'] ?? '');
                             ?>
@@ -160,7 +160,7 @@
                             $jumlah = trim($data['jumlah'] ?? '');
                             ?>
                             <p>
-                                <strong>Jumlah Additional (Rp):</strong>Rp.
+                                <strong>Jumlah Additional (Rp):</strong> Rp.
                                 <?= $jumlah !== '' ? number_format($jumlah, 0, ',', '.') : '-' ?>
                             </p>
                             <p>

@@ -181,7 +181,7 @@
                                                 <p><strong>Destination:</strong>
                                                     <?= $data['destination']; ?>
                                                 </p>
-                                                <p><strong>Ritase:</strong>
+                                                <p><strong>Jumlah Ritase:</strong>
                                                     <?= $data['ritase']; ?>
                                                 </p>
                                                 <?php
@@ -199,7 +199,7 @@
                                                 $jumlah = trim($data['jumlah'] ?? '');
                                                 ?>
                                                 <p>
-                                                    <strong>Jumlah Additional (Rp):</strong>Rp.
+                                                    <strong>Jumlah Additional (Rp):</strong> Rp.
                                                     <?= $jumlah !== '' ? number_format($jumlah, 0, ',', '.') : '-' ?>
                                                 </p>
                                                 <p>
