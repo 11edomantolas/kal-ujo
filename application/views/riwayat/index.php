@@ -91,7 +91,7 @@
                                 <div class="modal-dialog modal-dialog-centered modal-lg">
                                     <div class="modal-content rounded-4 shadow">
                                         <div class="modal-header bg-primary text-white">
-                                            <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i>Detail Uang
+                                            <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i> Detail Uang
                                                 Jalan</h5>
                                             <button type="button" class="btn-close text-white" data-dismiss="modal"
                                                 aria-label="Close"></button>
@@ -115,7 +115,9 @@
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p><strong>Cargo:</strong> <?= $data['cargo']; ?></p>
-                                                    <p><strong>Tonase:</strong> <?= number_format($data['tonase'], 2); ?></p>
+                                                    <p><strong>Tonase:</strong>
+                                                        <?= number_format($data['tonase'], 2); ?>
+                                                    </p>
                                                     <p><strong>Origin:</strong> <?= $data['origin']; ?></p>
                                                     <p><strong>Destination:</strong> <?= $data['destination']; ?></p>
                                                     <p><strong>Jumlah Ritase:</strong> <?= $data['ritase']; ?></p>
@@ -277,8 +279,15 @@
     // ================= CUSTOM FILTER =================
     $(document).ready(function () {
         const table = $('#uangJalanTable').DataTable({
+            scrollX: true,
+            autoWidth: false,
             language: { emptyTable: "History tidak ditemukan" },
-            pageLength: 10
+            dom: "<'row mb-3'<'col-md-6'l><'col-md-6 text-end'f>>" +
+                "rt" +
+                "<'row'<'col-md-5'i><'col-md-7'p>>",
+            pageLength: 10,
+            lengthMenu: [5, 10, 25, 50],
+            order: []
         });
 
         // keyword search (semua kolom)

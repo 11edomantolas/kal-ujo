@@ -102,6 +102,27 @@ class Uangjalan extends MY_Controller
         if (empty($data['uang_jalan'])) {
             show_404();
         }
+        $status = $data['uang_jalan'][0]['status'];
+
+        if ($status === 'Rejected') {
+            $this->session->set_flashdata(
+                'pesan',
+                '<div class="alert alert-danger">
+            Data sudah <b>DITOLAK</b> dan tidak dapat diedit.
+        </div>'
+            );
+            redirect('uangjalan');
+        }
+
+        if ($status === 'Approved') {
+            $this->session->set_flashdata(
+                'pesan',
+                '<div class="alert alert-warning">
+            Data sudah <b>DISETUJUI</b> dan tidak dapat diedit.
+        </div>'
+            );
+            redirect('uangjalan');
+        }
 
         $data['header'] = $data['uang_jalan'][0];
         $data['header']['jumlah_total'] =

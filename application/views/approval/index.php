@@ -115,7 +115,7 @@
             <div class="modal-content rounded-4 shadow">
 
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i>Detail Uang
+                    <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i> Detail Uang
                         Jalan</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -139,7 +139,6 @@
                         </div>
                         <div class="col-md-6">
                             <p><strong>Cargo:</strong> <?= $data['cargo']; ?></p>
-                            <p><strong>Tonase:</strong> <?= number_format($data['tonase'], 2); ?></p>
                             <p><strong>Origin:</strong> <?= $data['origin']; ?></p>
                             <p><strong>Destination:</strong> <?= $data['destination']; ?></p>
                             <p><strong>Jumlah Ritase:</strong> <?= $data['ritase']; ?></p>
@@ -149,9 +148,6 @@
                             <?php
                             $no_surat_jalan = trim($data['no_surat_jalan'] ?? '');
                             ?>
-                            <p><strong>No Surat Jalan:</strong>
-                                <?= $no_surat_jalan !== '' ? $no_surat_jalan : '-' ?>
-                            </p>
                             <p><strong>Alasan Additional:</strong>
                                 <?= $alasan !== '' ? $alasan : '-' ?>
                             </p>

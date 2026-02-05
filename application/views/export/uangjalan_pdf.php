@@ -105,76 +105,50 @@
                 <tr>
                     <td colspan="15" class="text-center">Data tidak tersedia</td>
                 </tr>
+
             <?php else: ?>
-                <?php $no = 1;
-                foreach ($rows as $r): ?>
+                <?php
+                $no = 1;
+                $total_ujo = 0;
+                foreach ($rows as $r):
+                    $total_ujo += (float) $r->ujo;
+                    ?>
                     <tr>
                         <td class="text-center"><?= $no++; ?></td>
-
+                        <td class="text-center"><?= htmlspecialchars($r->no_cs); ?></td>
+                        <td class="text-center"><?= date('d-m-Y', strtotime($r->tanggal)); ?></td>
+                        <td class="text-center"><?= $r->no_surat_jalan ?: '-'; ?></td>
+                        <td class="text-center"><?= htmlspecialchars($r->no_unit); ?></td>
+                        <td class="text-left"><?= htmlspecialchars($r->driver); ?></td>
+                        <td class="text-left"><?= htmlspecialchars($r->nama_bank); ?></td>
+                        <td class="text-center"><?= htmlspecialchars($r->nomor_rekening); ?></td>
+                        <td class="text-left"><?= htmlspecialchars($r->cargo); ?></td>
+                        <td class="text-left"><?= htmlspecialchars($r->origin); ?></td>
+                        <td class="text-left"><?= htmlspecialchars($r->destination); ?></td>
+                        <td class="text-right"><?= number_format($r->tonase, 2, ',', '.'); ?> Ton</td>
+                        <td class="text-right">Rp <?= number_format($r->ujo, 0, ',', '.'); ?></td>
+                        <td class="text-center"><?= ucfirst(strtolower($r->status)); ?></td>
                         <td class="text-center">
-                            <?= htmlspecialchars($r->no_cs, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-
-                        <td class="text-center">
-                            <?= date('d-m-Y', strtotime($r->tanggal)); ?>
-                        </td>
-
-                        <td class="text-center">
-                            <?= !empty(trim($r->no_surat_jalan ?? ''))
-                                ? htmlspecialchars($r->no_surat_jalan, ENT_QUOTES, 'UTF-8')
-                                : '-'; ?>
-                        </td>
-
-                        <td class="text-center">
-                            <?= htmlspecialchars($r->no_unit, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-
-                        <td class="text-left">
-                            <?= htmlspecialchars($r->driver, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-
-                        <td class="text-left">
-                            <?= htmlspecialchars($r->nama_bank, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-
-                        <td class="text-center">
-                            <?= htmlspecialchars($r->nomor_rekening, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-
-                        <td class="text-left">
-                            <?= htmlspecialchars($r->cargo, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-
-                        <td class="text-left">
-                            <?= htmlspecialchars($r->origin, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-
-                        <td class="text-left">
-                            <?= htmlspecialchars($r->destination, ENT_QUOTES, 'UTF-8'); ?>
-                        </td>
-
-                        <td class="text-right">
-                            <?= number_format($r->tonase, 2, ',', '.'); ?> Ton
-                        </td>
-
-                        <td class="text-right">
-                            Rp <?= number_format($r->ujo, 0, ',', '.'); ?>
-                        </td>
-
-                        <td class="text-center">
-                            <?= ucfirst(strtolower($r->status)); ?>
-                        </td>
-
-                        <td class="text-center">
-                            <?= strtolower($r->status_pembayaran) === 'paid'
-                                ? 'Lunas'
-                                : ucfirst(strtolower($r->status_pembayaran)); ?>
+                            <?= strtolower($r->status_pembayaran) === 'paid' ? 'Lunas' : ucfirst($r->status_pembayaran); ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
+
+                <!-- BARIS TOTAL -->
+                <tr>
+                    <td colspan="12" class="text-right" style="font-weight:bold;">
+                        TOTAL UANG JALAN
+                    </td>
+                    <td class="text-right" style="font-weight:bold;">
+                        Rp <?= number_format($total_ujo, 0, ',', '.'); ?>
+                    </td>
+                    <td colspan="2"></td>
+                </tr>
+
             <?php endif; ?>
 
         </tbody>
+
     </table>
 
     <div class="footer">

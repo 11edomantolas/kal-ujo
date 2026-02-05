@@ -229,7 +229,7 @@
 
             <hr class="sidebar-divider">
 
-            <div class="sidebar-heading">Data Master</div>
+            <div class="sidebar-heading">Transaksi</div>
 
             <?php
             $uri1 = $this->uri->segment(1);
@@ -322,7 +322,7 @@
 
             <?php if (has_permission('can_manage_master_data')): ?>
                 <hr class="sidebar-divider">
-                <div class="sidebar-heading">Settings</div>
+                <div class="sidebar-heading">Data</div>
 
                 <li class="nav-item <?= is_active('bank'); ?>">
                     <a class="nav-link" href="<?= base_url('bank'); ?>">

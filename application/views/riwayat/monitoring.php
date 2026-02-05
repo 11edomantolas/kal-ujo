@@ -128,7 +128,7 @@
                                 <div class="modal-dialog modal-dialog-centered modal-lg">
                                     <div class="modal-content rounded-4 shadow">
                                         <div class="modal-header bg-primary text-white">
-                                            <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i>Detail Uang
+                                            <h5 class="modal-title fw-bold"><i class="fas fa-info-circle me-2"></i> Detail Uang
                                                 Jalan</h5>
                                             <button type="button" class="btn-close text-white" data-dismiss="modal"
                                                 aria-label="Close"></button>
@@ -320,6 +320,9 @@
     // ================= CUSTOM FILTER =================
     $(document).ready(function () {
         const table = $('#uangJalanTable').DataTable({
+            scrollX: true,
+            autoWidth: false,
+            responsive: false,
             language: { emptyTable: "History tidak ditemukan" },
             pageLength: 10
         });

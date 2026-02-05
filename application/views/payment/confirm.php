@@ -95,7 +95,7 @@
 
                         <!-- ================== BREAKDOWN RIT ================== -->
                         <tr>
-                            <td colspan="9" class="p-0">
+                            <td colspan="8" class="p-0">
                                 <div class="collapse breakdown-container" id="detail-<?= $no_cs ?>">
                                     <div class="breakdown-section-header">
                                         <i class="fas fa-tasks me-2"></i> Detail & Settlement Pekerjaan
@@ -209,7 +209,7 @@
             <div class="modal-content rounded-4 shadow">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title">
-                        <i class="fas fa-info-circle me-2"></i>Detail Uang Jalan
+                        <i class="fas fa-info-circle me-2"></i> Detail Uang Jalan
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
@@ -255,6 +255,13 @@
                                 <span class="text-primary fw-semibold">
                                     Rp
                                     <?= number_format(array_sum(array_column($items, 'ujo')), 0, ',', '.'); ?>
+                                </span>
+                            </p>
+                            <p>
+                                <strong>Total UJO Terbayar:</strong>
+                                <span class="text-success fw-semibold">
+                                    Rp
+                                    <?= number_format(array_sum(array_column($items, 'ujo_terbayar')), 0, ',', '.'); ?>
                                 </span>
                             </p>
                             <p>
@@ -584,6 +591,9 @@
     $(document).ready(function () {
 
         const table = $('#uangJalanTable').DataTable({
+            scrollX: false,
+            autoWidth: false,
+            responsive: true,
             language: {
                 emptyTable: "Belum ada data yang perlu dikonfirmasi"
             },
@@ -687,5 +697,4 @@
             row.removeClass('ready');
         }
     });
-
 </script>

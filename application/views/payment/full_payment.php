@@ -109,7 +109,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content rounded-4 shadow">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="fas fa-info-circle me-2"></i>Detail Uang Jalan</h5>
+                    <h5 class="modal-title"><i class="fas fa-info-circle me-2"></i> Detail Uang Jalan</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body bg-light">

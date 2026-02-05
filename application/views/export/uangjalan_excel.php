@@ -28,73 +28,68 @@ header("Expires: 0");
 <!-- ================= TABEL DATA ================= -->
 <table border="1" width="100%" cellpadding="6" cellspacing="0">
     <tr>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="3%">No</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="6%">No CS</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="7%">Tanggal</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="8%">No Surat Jalan</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="6%">No Unit</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="10%">Driver</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="8%">Bank</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="10%">No Rekening</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="7%">Cargo</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="7%">Origin</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="7%">Destination</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="5%">Tonase</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="7%">UJO</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="6%">Approval</th>
-        <th style="background-color:#d9edf7; font-weight:bold; text-align:center;" width="6%">Pembayaran</th>
+        <th style="background-color:#d9edf7; text-align:center;">No</th>
+        <th style="background-color:#d9edf7; text-align:center;">No CS</th>
+        <th style="background-color:#d9edf7; text-align:center;">Tanggal</th>
+        <th style="background-color:#d9edf7; text-align:center;">No Surat Jalan</th>
+        <th style="background-color:#d9edf7; text-align:center;">No Unit</th>
+        <th style="background-color:#d9edf7; text-align:center;">Driver</th>
+        <th style="background-color:#d9edf7; text-align:center;">Bank</th>
+        <th style="background-color:#d9edf7; text-align:center;">No Rekening</th>
+        <th style="background-color:#d9edf7; text-align:center;">Cargo</th>
+        <th style="background-color:#d9edf7; text-align:center;">Origin</th>
+        <th style="background-color:#d9edf7; text-align:center;">Destination</th>
+        <th style="background-color:#d9edf7; text-align:center;">Tonase</th>
+        <th style="background-color:#d9edf7; text-align:center;">UJO</th>
+        <th style="background-color:#d9edf7; text-align:center;">Approval</th>
+        <th style="background-color:#d9edf7; text-align:center;">Pembayaran</th>
     </tr>
 
-    <?php $no = 1;
-    foreach ($rows as $r): ?>
+    <?php if (empty($rows)): ?>
         <tr>
-            <td style="text-align:center;">
-                <?= $no++; ?>
-            </td>
-            <td style="text-align:center;">
-                <?= $r->no_cs; ?>
-            </td>
-            <td style="text-align:center;">
-                <?= date('d-m-Y', strtotime($r->tanggal)); ?>
-            </td>
-            <td style="text-align:center;">
-                <?= !empty(trim($r->no_surat_jalan ?? '')) ? $r->no_surat_jalan : '-' ?>
-            </td>
-            <td style="text-align:center;">
-                <?= $r->no_unit; ?>
-            </td>
-            <td>
-                <?= $r->driver; ?>
-            </td>
-            <td>
-                <?= $r->nama_bank; ?>
-            </td>
-            <td style="mso-number-format:'\@'; text-align:center;">
-                <?= $r->nomor_rekening; ?>
-            </td>
-            <td>
-                <?= $r->cargo; ?>
-            </td>
-            <td>
-                <?= $r->origin; ?>
-            </td>
-            <td>
-                <?= $r->destination; ?>
-            </td>
-            <td style="text-align:right;">
-                <?= number_format($r->tonase, 2, ',', '.'); ?>
-            </td>
-            <td style="text-align:right;">
-                <?= number_format($r->ujo, 0, ',', '.'); ?>
-            </td>
-            <td style="text-align:center;">
-                <?= ucfirst($r->status); ?>
-            </td>
-            <td style="text-align:center;">
-                <?= strtolower($r->status_pembayaran) === 'paid'
-                    ? 'Lunas'
-                    : ucfirst($r->status_pembayaran); ?>
-            </td>
+            <td colspan="15" style="text-align:center;">Data tidak tersedia</td>
         </tr>
-    <?php endforeach; ?>
+
+    <?php else: ?>
+        <?php
+        $no = 1;
+        $total_ujo = 0;
+        foreach ($rows as $r):
+            $total_ujo += (float) $r->ujo;
+            ?>
+            <tr>
+                <td style="text-align:center;"><?= $no++; ?></td>
+                <td style="text-align:center;"><?= $r->no_cs; ?></td>
+                <td style="text-align:center;"><?= date('d-m-Y', strtotime($r->tanggal)); ?></td>
+                <td style="text-align:center;"><?= $r->no_surat_jalan ?: '-'; ?></td>
+                <td style="text-align:center;"><?= $r->no_unit; ?></td>
+                <td><?= $r->driver; ?></td>
+                <td><?= $r->nama_bank; ?></td>
+                <td style="mso-number-format:'\@'; text-align:center;"><?= $r->nomor_rekening; ?></td>
+                <td><?= $r->cargo; ?></td>
+                <td><?= $r->origin; ?></td>
+                <td><?= $r->destination; ?></td>
+                <td style="text-align:right;"><?= number_format($r->tonase, 2, ',', '.'); ?></td>
+                <td style="text-align:right;"><?= number_format($r->ujo, 0, ',', '.'); ?></td>
+                <td style="text-align:center;"><?= ucfirst($r->status); ?></td>
+                <td style="text-align:center;">
+                    <?= strtolower($r->status_pembayaran) === 'paid'
+                        ? 'Lunas'
+                        : ucfirst($r->status_pembayaran); ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+
+        <!-- TOTAL -->
+        <tr>
+            <td colspan="12" style="text-align:right; font-weight:bold;">
+                TOTAL UANG JALAN
+            </td>
+            <td style="text-align:right; font-weight:bold;">
+                <?= number_format($total_ujo, 0, ',', '.'); ?>
+            </td>
+            <td colspan="2"></td>
+        </tr>
+    <?php endif; ?>
+
 </table>

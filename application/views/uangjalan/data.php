@@ -55,10 +55,18 @@
                     foreach ($uang_jalan as $data): ?>
                         <tr>
                             <!-- <td class="text-center"><?= $no++; ?></td> -->
-                            <td><?= $data['no_cs']; ?></td>
-                            <td><?= date('d-m-Y', strtotime($data['tanggal'])); ?></td>
-                            <td><?= $data['no_unit']; ?></td>
-                            <td><?= $data['driver']; ?></td>
+                            <td>
+                                <?= $data['no_cs']; ?>
+                            </td>
+                            <td>
+                                <?= date('d-m-Y', strtotime($data['tanggal'])); ?>
+                            </td>
+                            <td>
+                                <?= $data['no_unit']; ?>
+                            </td>
+                            <td>
+                                <?= $data['driver']; ?>
+                            </td>
                             <!-- kolom status helper untuk sorting -->
                             <?php
                             switch (strtolower($data['status'])) {
@@ -78,7 +86,9 @@
                                     $status_order = 5;
                             }
                             ?>
-                            <td style="display:none;"><?= $status_order ?></td>
+                            <td style="display:none;">
+                                <?= $status_order ?>
+                            </td>
                             <td class="text-center">
                                 <?php
                                 if ($data['status'] == 'Approved') {
@@ -93,7 +103,9 @@
                                     $badgeClass = 'bg-secondary text-white';
                                 }
                                 ?>
-                                <span class="badge <?= $badgeClass ?>"><?= $data['status']; ?></span>
+                                <span class="badge <?= $badgeClass ?>">
+                                    <?= $data['status']; ?>
+                                </span>
                             </td>
 
                             <?php
@@ -172,9 +184,6 @@
                                                 <p><strong>Cargo:</strong>
                                                     <?= $data['cargo']; ?>
                                                 </p>
-                                                <p><strong>Tonase:</strong>
-                                                    <?= number_format($data['tonase'], 2); ?>
-                                                </p>
                                                 <p><strong>Origin:</strong>
                                                     <?= $data['origin']; ?>
                                                 </p>
@@ -190,8 +199,6 @@
                                                 <?php
                                                 $no_surat_jalan = trim($data['no_surat_jalan'] ?? '');
                                                 ?>
-                                                <p><strong>No Surat Jalan:</strong>
-                                                    <?= $no_surat_jalan !== '' ? $no_surat_jalan : '-' ?>
                                                 <p><strong>Alasan Additional:</strong>
                                                     <?= $alasan !== '' ? $alasan : '-' ?>
                                                 </p>

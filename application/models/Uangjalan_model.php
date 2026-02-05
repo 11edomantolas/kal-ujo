@@ -514,12 +514,44 @@ class Uangjalan_model extends MY_Model
     public function get_process_list()
     {
         return $this->db
+            ->select("
+            no_cs,
+            MAX(id) AS id,
+            MAX(rit_ke) AS rit_ke,
+            MAX(tanggal) AS tanggal,
+            MAX(tipe_pekerjaan) AS tipe_pekerjaan,
+            MAX(no_unit) AS no_unit,
+            GROUP_CONCAT(DISTINCT driver SEPARATOR ', ') AS driver,
+            MAX(nomor_rekening) AS nomor_rekening,
+            MAX(nama_bank) AS nama_bank,
+            MAX(no_surat_jalan) AS no_surat_jalan,
+            MAX(tonase) AS tonase,
+            MAX(cargo) AS cargo,
+            MAX(origin) AS origin,
+            MAX(destination) AS destination,
+            MAX(ritase) AS ritase,
+            MAX(tipe_angkutan) AS tipe_angkutan,
+            MAX(vesel) AS vesel,
+            MAX(additional) AS additional,
+            MAX(alasan) AS alasan,
+            MAX(jumlah) AS jumlah,
+            SUM(ujo) AS ujo,
+            SUM(ujo_terbayar) AS ujo_terbayar,
+            SUM(ujo_sisa) AS ujo_sisa,
+            MAX(status) AS status,
+            MAX(status_pekerjaan) AS status_pekerjaan,
+            MAX(catatan) AS catatan,
+            MAX(status_pembayaran) AS status_pembayaran
+        ", false)
+            ->from('uang_jalan')
             ->where('status_pembayaran', 'Partial')
             ->where('status_pekerjaan', 'Uncompleted')
+            ->group_by('no_cs')
             ->order_by('tanggal', 'DESC')
-            ->get('uang_jalan')
+            ->get()
             ->result_array();
     }
+
 
     public function update_rit($id, $data)
     {
